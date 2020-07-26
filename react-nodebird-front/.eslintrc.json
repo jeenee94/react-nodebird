@@ -21,8 +21,18 @@
         "extensions": [".js", ".jsx"]
       }
     ],
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {
+        "labelComponents": ["label"],
+        "labelAttributes": ["htmlFor"],
+        "controlComponents": ["input"]
+      }
+    ],
     "react/prop-types": 0,
     "no-underscore-dangle": 0,
+    "no-console": 0,
+    "no-unused-vars": 0,
     "import/imports-first": ["error", "absolute-first"],
     "import/newline-after-import": "error",
     "import/prefer-default-export": 0,
