@@ -1,5 +1,5 @@
 import React from 'react';
-import propTypes from 'prop-types';
+import Proptypes from 'prop-types';
 import { Button, Card, List } from 'antd';
 import { StopOutlined } from '@ant-design/icons';
 
@@ -26,9 +26,9 @@ const FollowList = ({ header, data }) => (
   />
 );
 
-FollowList.propTypes = {
-  header: propTypes.string.isRequired,
-  data: propTypes.arrayOf.isRequired,
+FollowList.prop_types = {
+  header: Proptypes.string.isRequired,
+  data: Proptypes.array.isRequired,
 };
 
 export default FollowList;

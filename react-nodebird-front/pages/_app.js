@@ -1,5 +1,5 @@
 import React from 'react';
-import propTypes from 'prop-types';
+import Proptypes from 'prop-types';
 import Head from 'next/head';
 import 'antd/dist/antd.css';
 
@@ -16,8 +16,8 @@ const App = ({ Component }) => {
   );
 };
 
-App.propTypes = {
-  Component: propTypes.elementType.isRequired,
+App.prop_types = {
+  Component: Proptypes.elementType.isRequired,
 };
 
 export default wrapper.withRedux(App);

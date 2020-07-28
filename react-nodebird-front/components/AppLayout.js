@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import propTypes from 'prop-types';
+import Proptypes from 'prop-types';
 import Link from 'next/link';
 import { Menu, Input, Row, Col } from 'antd';
 import { useSelector } from 'react-redux';
@@ -53,8 +53,8 @@ const AppLayout = ({ children }) => {
   );
 };
 
-AppLayout.propTypes = {
-  children: propTypes.node.isRequired,
+AppLayout.prop_types = {
+  children: Proptypes.node.isRequired,
 };
 
 export default AppLayout;
