@@ -30,7 +30,7 @@ export const initialState = {
           User: {
             nickname: 'nero',
           },
-          content: 'ㅎㅇ1',
+          content: 'ㅎㅇ2',
         },
       ],
     },
