@@ -1,10 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 
 import useInput from '../hooks/useInput';
-import { loginRequestAction } from '../reducers/user';
+import { LOG_IN_REQUEST } from '../reducers/user';
 
 const LoginForm = () => {
   const dispatch = useDispatch();
@@ -13,8 +13,7 @@ const LoginForm = () => {
   const [password, onChangePassword] = useInput('');
 
   const onSubmitForm = useCallback(() => {
-    console.log(email, password);
-    dispatch(loginRequestAction({ email, password }));
+    dispatch({ type: LOG_IN_REQUEST, data: { email, password } });
   }, [email, password]);
 
   return (
@@ -26,6 +25,7 @@ const LoginForm = () => {
           name="user-email"
           value={email}
           onChange={onChangeEmail}
+          type="email"
           required
         />
       </div>

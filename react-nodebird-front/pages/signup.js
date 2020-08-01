@@ -1,19 +1,46 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
+import Router from 'next/router';
 import Head from 'next/head';
 import { Form, Input, Checkbox, Button } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
 
 import AppLayout from '../components/AppLayout';
 import useInput from '../hooks/useInput';
+import { SIGN_UP_REQUEST } from '../reducers/user';
 
 const Signup = () => {
+  const dispatch = useDispatch();
+  const { signUpLoading, signUpDone, signUpError, me } = useSelector(
+    (state) => state.user,
+  );
+
   const [passwordCheck, setPasswordCheck] = useState('');
   const [term, setTerm] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [termError, setTermError] = useState(false);
 
-  const [id, onChangeId] = useInput('');
+  const [email, onChangeEmail] = useInput('');
   const [nickname, onChangenicknamename] = useInput('');
   const [password, onChangePassword] = useInput('');
+
+  useEffect(() => {
+    if (me && me.id) {
+      Router.replace('/');
+    }
+  }, [me && me.id]);
+
+  useEffect(() => {
+    if (signUpDone) {
+      alert('가입에 성공하셨습니다.');
+      Router.push('/');
+    }
+  }, [signUpDone]);
+
+  useEffect(() => {
+    if (signUpError) {
+      alert(signUpError);
+    }
+  }, [signUpError]);
 
   const onFinish = useCallback(() => {
     if (!term) {
@@ -22,8 +49,11 @@ const Signup = () => {
     if (password !== passwordCheck) {
       return setPasswordError(true);
     }
-    return null;
-  }, [password, passwordCheck, term]);
+    return dispatch({
+      type: SIGN_UP_REQUEST,
+      data: { email, password, nickname },
+    });
+  }, [email, password, passwordCheck, term]);
 
   const onChangePasswordCheck = useCallback((e) => {
     setPasswordError(false);
@@ -42,9 +72,15 @@ const Signup = () => {
       </Head>
       <Form onFinish={onFinish} style={{ padding: 10 }}>
         <div>
-          <label htmlFor="user-id">아이디</label>
+          <label htmlFor="user-email">이메일</label>
           <br />
-          <Input name="user-id" value={id} required onChange={onChangeId} />
+          <Input
+            name="user-email"
+            value={email}
+            required
+            onChange={onChangeEmail}
+            type="email"
+          />
         </div>
         <div>
           <label htmlFor="user-nickname">닉네임</label>
@@ -90,7 +126,7 @@ const Signup = () => {
           )}
         </div>
         <div style={{ marginTop: 10 }}>
-          <Button type="primary" htmlType="submit">
+          <Button type="primary" htmlType="submit" loading={signUpLoading}>
             가입하기
           </Button>
         </div>

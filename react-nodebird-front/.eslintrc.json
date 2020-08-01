@@ -15,28 +15,17 @@
     "es6": true
   },
   "rules": {
-    "react/jsx-filename-extension": [
-      1,
-      {
-        "extensions": [".js", ".jsx"]
-      }
-    ],
-    "jsx-a11y/label-has-associated-control": [
-      2,
-      {
-        "labelComponents": ["label"],
-        "labelAttributes": ["htmlFor"],
-        "controlComponents": ["input"]
-      }
-    ],
-    "react/prop-types": 0,
-    "no-underscore-dangle": 0,
-    "no-console": 0,
-    "no-unused-vars": 0,
-    "import/imports-first": ["error", "absolute-first"],
-    "import/newline-after-import": "error",
-    "import/prefer-default-export": 0,
-    "semi": "error"
+    "jsx-a11y/label-has-associated-control": "off",
+    "jsx-a11y/anchor-is-valid": "off",
+    "no-alert": "off",
+    "no-console": "off",
+    "no-underscore-dangle": "off",
+    "react/forbid-prop-types": "off",
+    "react/jsx-filename-extension": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "object-curly-newline": "off",
+    "linebreak-style": "off",
+    "no-param-reassign": "off"
   },
   "globals": {
     "window": true,
