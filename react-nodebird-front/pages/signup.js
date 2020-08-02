@@ -46,7 +46,7 @@ const Signup = () => {
     if (!term) {
       return setTermError(true);
     }
-    if (password !== passwordCheck) {
+    if (password !== passwordCheck || password.length < 8) {
       return setPasswordError(true);
     }
     return dispatch({
@@ -70,6 +70,7 @@ const Signup = () => {
       <Head>
         <title>회원가입 | NodeBird</title>
       </Head>
+      <h1 style={{ padding: 10 }}>회원가입</h1>
       <Form onFinish={onFinish} style={{ padding: 10 }}>
         <div>
           <label htmlFor="user-email">이메일</label>
@@ -80,20 +81,22 @@ const Signup = () => {
             required
             onChange={onChangeEmail}
             type="email"
+            style={{ width: 300 }}
           />
         </div>
         <div>
-          <label htmlFor="user-nickname">닉네임</label>
+          <label htmlFor="user-nickname">닉네임(20자 이하)</label>
           <br />
           <Input
             name="user-nickname"
             value={nickname}
             required
             onChange={onChangenicknamename}
+            style={{ width: 200 }}
           />
         </div>
         <div>
-          <label htmlFor="user-password">비밀번호</label>
+          <label htmlFor="user-password">비밀번호(8자 이상)</label>
           <br />
           <Input
             name="user-password"
@@ -101,6 +104,7 @@ const Signup = () => {
             value={password}
             required
             onChange={onChangePassword}
+            style={{ width: 200 }}
           />
         </div>
         <div>
@@ -112,9 +116,12 @@ const Signup = () => {
             value={passwordCheck}
             required
             onChange={onChangePasswordCheck}
+            style={{ width: 200 }}
           />
           {passwordError && (
-            <div style={{ color: 'red' }}>비밀번호가 일치하지 않습니다.</div>
+            <div style={{ color: 'red' }}>
+              비밀번호가 일치하지 않거나 형식에 맞지 않습니다.
+            </div>
           )}
         </div>
         <div>
