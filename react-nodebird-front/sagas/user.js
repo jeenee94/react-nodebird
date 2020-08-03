@@ -23,7 +23,7 @@ import {
 } from '../reducers/user';
 
 function logInAPI(data) {
-  return axios.post('/user/login/local', data);
+  return axios.post('/user/login/'.concat(data.provider), data);
 }
 
 function* logIn(action) {

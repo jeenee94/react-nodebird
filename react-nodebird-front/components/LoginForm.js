@@ -2,6 +2,7 @@ import React, { useCallback, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
+import KakaoBtn from 'react-kakao-login';
 
 import useInput from '../hooks/useInput';
 import { LOG_IN_REQUEST } from '../reducers/user';
@@ -13,8 +14,31 @@ const LoginForm = () => {
   const [password, onChangePassword] = useInput('');
 
   const onSubmitForm = useCallback(() => {
-    dispatch({ type: LOG_IN_REQUEST, data: { email, password } });
+    dispatch({
+      type: LOG_IN_REQUEST,
+      data: { email, password, provider: 'local' },
+    });
   }, [email, password]);
+
+  const onSuccessKakao = useCallback(async (res) => {
+    const { id } = res.profile;
+    const { profile } = res.profile.kakao_account;
+    dispatch({
+      type: LOG_IN_REQUEST,
+      data: {
+        snsId: id.toString(),
+        email: id.toString().concat('@kakao.com'),
+        nickname: profile.nickname,
+        avatar: profile.profile_image_url,
+        provider: 'kakao',
+      },
+    });
+  });
+
+  const onFailureKakao = useCallback((err) => {
+    console.error(err);
+    alert(err);
+  });
 
   useEffect(() => {
     if (logInError) {
@@ -55,6 +79,15 @@ const LoginForm = () => {
             <Button>회원가입</Button>
           </a>
         </Link>
+      </div>
+      <div>
+        <KakaoBtn
+          jsKey="a3fd7530e852ab7dcbde2dc5fddaad8d"
+          buttonText="Kakao"
+          onSuccess={onSuccessKakao}
+          onFailure={onFailureKakao}
+          getProfile={1}
+        />
       </div>
     </Form>
   );

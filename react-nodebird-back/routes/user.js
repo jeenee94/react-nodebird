@@ -70,17 +70,55 @@ router.post('/login/local', (req, res, next) => {
   })(req, res, next);
 });
 
-router.get('/login/kakao', passport.authenticate('kakao'));
-
-router.get(
-  '/login/kakao/callback',
-  passport.authenticate('kakao', {
-    failureRedirect: '/',
-  }),
-  (req, res) => {
-    res.redirect('/');
+router.post('/login/kakao', async (req, res, next) => {
+  try {
+    const { email, nickname, provider, snsId, avatar } = req.body;
+    const exUser = await User.findOne({ where: { email } });
+    if (!exUser) {
+      await User.create({
+        email,
+        nickname,
+        provider,
+        snsId,
+        avatar,
+      });
+    }
+    const user = await User.findOne({ where: { email } });
+    let fullUserWithoutPassword;
+    req.login(user, async (loginErr) => {
+      if (loginErr) {
+        console.error(loginErr);
+        return next(loginErr);
+      }
+      fullUserWithoutPassword = await User.findOne({
+        where: { id: user.id },
+        attributes: {
+          exclude: ['password'],
+        },
+        include: [
+          {
+            model: Post,
+            attributes: ['id'],
+          },
+          {
+            model: User,
+            as: 'Followings',
+            attributes: ['id'],
+          },
+          {
+            model: User,
+            as: 'Followers',
+            attributes: ['id'],
+          },
+        ],
+      });
+      return res.status(200).json(fullUserWithoutPassword);
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
   }
-);
+});
 
 router.post('/logout', (req, res) => {
   req.logout();
