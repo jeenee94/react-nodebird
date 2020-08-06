@@ -1,6 +1,4 @@
-import shortId from 'shortid';
 import produce from 'immer';
-import faker from 'faker';
 
 export const initialState = {
   mainPosts: [],
@@ -18,31 +16,19 @@ export const initialState = {
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
+  likePostLoading: false,
+  likePostDone: false,
+  likePostError: null,
+  unlikePostLoading: false,
+  unlikePostDone: false,
+  unlikePostError: null,
+  uploadImagesLoading: false,
+  uploadImagesDone: false,
+  uploadImagesError: null,
+  retweetLoading: false,
+  retweetDone: false,
+  retweetError: null,
 };
-
-export const generateDummyPost = (number) =>
-  Array(number)
-    .fill()
-    .map(() => ({
-      id: shortId.generate(),
-      User: {
-        id: shortId.generate(),
-        nickname: faker.name.findName(),
-      },
-      content: faker.lorem.paragraph(),
-      Images: Array(Math.floor(Math.random() * 5 + 1))
-        .fill()
-        .map(() => ({ src: faker.image.image() })),
-      Comments: Array(Math.floor(Math.random() * 5 + 1))
-        .fill()
-        .map(() => ({
-          User: {
-            id: shortId.generate(),
-            nickname: faker.name.findName(),
-          },
-          content: faker.lorem.sentence(),
-        })),
-    }));
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
@@ -60,25 +46,23 @@ export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
 export const ADD_COMMENT_FAILURE = 'ADD_COMMENT_FAILURE';
 
-const dummyPost = (data) => ({
-  id: data.id,
-  content: data.content,
-  User: {
-    id: 1,
-    nickname: 'nero',
-  },
-  Images: [],
-  Comments: [],
-});
+export const LIKE_POST_REQUEST = 'LIKE_POST_REQUEST';
+export const LIKE_POST_SUCCESS = 'LIKE_POST_SUCCESS';
+export const LIKE_POST_FAILURE = 'LIKE_POST_FAILURE';
 
-const dummyComment = (data) => ({
-  id: shortId.generate(),
-  content: data,
-  User: {
-    id: 1,
-    nickname: 'jeenee',
-  },
-});
+export const UNLIKE_POST_REQUEST = 'UNLIKE_POST_REQUEST';
+export const UNLIKE_POST_SUCCESS = 'UNLIKE_POST_SUCCESS';
+export const UNLIKE_POST_FAILURE = 'UNLIKE_POST_FAILURE';
+
+export const UPLOAD_IMAGES_REQUEST = 'UPLOAD_IMAGES_REQUEST';
+export const UPLOAD_IMAGES_SUCCESS = 'UPLOAD_IMAGES_SUCCESS';
+export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
+
+export const RETWEET_REQUEST = 'RETWEET_REQUEST';
+export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
+export const RETWEET_FAILURE = 'RETWEET_FAILURE';
+
+export const REMOVE_IMAGE = 'REMOVE_IMAGE';
 
 const reducer = (state = initialState, action) =>
   produce(state, (draft) => {
@@ -91,7 +75,7 @@ const reducer = (state = initialState, action) =>
       case LOAD_POSTS_SUCCESS:
         draft.loadPostsLoading = false;
         draft.loadPostsDone = true;
-        draft.mainPosts = action.data.concat(draft.mainPosts);
+        draft.mainPosts = draft.mainPosts.concat(action.data);
         draft.hasMorePosts = draft.mainPosts.length < 50;
         break;
       case LOAD_POSTS_FAILURE:
@@ -106,7 +90,7 @@ const reducer = (state = initialState, action) =>
       case ADD_POST_SUCCESS:
         draft.addPostLoading = false;
         draft.addPostDone = true;
-        draft.mainPosts.unshift(dummyPost(action.data));
+        draft.mainPosts.unshift(action.data);
         break;
       case ADD_POST_FAILURE:
         draft.addPostLoading = false;
@@ -132,8 +116,8 @@ const reducer = (state = initialState, action) =>
         draft.addCommentError = null;
         break;
       case ADD_COMMENT_SUCCESS: {
-        const post = draft.mainPosts.find((v) => v.id === action.data.postId);
-        post.Comments.unshift(dummyComment(action.data.content));
+        const post = draft.mainPosts.find((v) => v.id === action.data.PostId);
+        post.Comments.unshift(action.data);
         draft.addCommentLoading = false;
         draft.addCommentDone = true;
         break;

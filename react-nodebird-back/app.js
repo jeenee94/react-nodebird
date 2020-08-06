@@ -5,7 +5,7 @@ const session = require('express-session');
 const cookieParser = require('cookie-parser');
 const passport = require('passport');
 const dotenv = require('dotenv');
-dotenv.config();
+const morgan = require('morgan');
 
 const db = require('./models');
 const passportConfig = require('./passport');
@@ -14,6 +14,7 @@ const postRouter = require('./routes/post');
 const postsRouter = require('./routes/posts');
 const userRouter = require('./routes/user');
 
+dotenv.config();
 const app = express();
 db.sequelize
   .sync()
@@ -24,29 +25,26 @@ db.sequelize
 
 passportConfig();
 
+app.use(morgan('dev'));
 app.use(
   cors({
-    origin: true,
-    credentials: false,
+    origin: 'http://localhost:3000',
+    credentials: true,
   })
 );
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   session({
+    secret: process.env.COOKIE_SECRET,
     saveUninitialized: false,
     resave: false,
-    secret: process.env.COOKIE_SECRET,
   })
 );
 app.use(passport.initialize());
 app.use(passport.session());
-
-app.get('/', (req, res) => {
-  res.json('hi');
-});
 
 app.use('/post', postRouter);
 app.use('/posts', postsRouter);
