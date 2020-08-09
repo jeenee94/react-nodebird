@@ -1,13 +1,15 @@
 import React, { useEffect } from 'react';
 import Head from 'next/head';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import Router from 'next/router';
 
 import AppLayout from '../components/AppLayout';
 import NicknameEditForm from '../components/NicknameEditForm';
 import FollowList from '../components/FollowList';
+import { LOAD_MY_INFO_REQUEST } from '../reducers/user';
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const { me } = useSelector((state) => state.user);
 
   useEffect(() => {
@@ -18,6 +20,12 @@ const Profile = () => {
   if (!me) {
     return null;
   }
+
+  useEffect(() => {
+    dispatch({
+      type: LOAD_MY_INFO_REQUEST,
+    });
+  }, []);
 
   return (
     <>

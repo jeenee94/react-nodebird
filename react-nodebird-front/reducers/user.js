@@ -22,6 +22,9 @@ export const initialState = {
   unfollowLoading: false, // 언팔로우 시도중
   unfollowDone: false,
   unfollowError: null,
+  removeFollowerLoading: false, // 팔로워 차단 시도중
+  removeFollowerDone: false,
+  removeFollowerError: null,
   me: null,
   signUpData: {},
   loginData: {},
@@ -51,26 +54,16 @@ export const FOLLOW_REQUEST = 'FOLLOW_REQUEST';
 export const FOLLOW_SUCCESS = 'FOLLOW_SUCCESS';
 export const FOLLOW_FAILURE = 'FOLLOW_FAILURE';
 
-export const UNFOLLOW_SUCCESS = 'UNFOLLOW_SUCCESS';
 export const UNFOLLOW_REQUEST = 'UNFOLLOW_REQUEST';
+export const UNFOLLOW_SUCCESS = 'UNFOLLOW_SUCCESS';
 export const UNFOLLOW_FAILURE = 'UNFOLLOW_FAILURE';
+
+export const REMOVE_FOLLOWER_REQUEST = 'REMOVE_FOLLOWER_REQUEST';
+export const REMOVE_FOLLOWER_SUCCESS = 'REMOVE_FOLLOWER_SUCCESS';
+export const REMOVE_FOLLOWER_FAILURE = 'REMOVE_FOLLOWER_FAILURE';
 
 export const ADD_POST_TO_ME = 'ADD_POST_TO_ME';
 export const REMOVE_POST_OF_ME = 'REMOVE_POST_OF_ME';
-
-/* 더미 데이터 */
-const dummyUser = (data) => ({
-  ...data,
-  id: 1,
-  nickname: '지네',
-  Posts: [{ id: 1 }],
-  Followings: [{ nickname: 'jerry' }, { nickname: 'tom' }],
-  Followers: [
-    { nickname: 'tom' },
-    { nickname: 'jerry' },
-    { nickname: 'herry' },
-  ],
-});
 
 const reducer = (state = initialState, action) =>
   produce(state, (draft) => {
@@ -81,8 +74,8 @@ const reducer = (state = initialState, action) =>
         draft.loadMyInfoDone = false;
         break;
       case LOAD_MY_INFO_SUCCESS:
-        draft.loadMyInfoLoading = false;
         draft.me = action.data;
+        draft.loadMyInfoLoading = false;
         draft.loadMyInfoDone = true;
         break;
       case LOAD_MY_INFO_FAILURE:
@@ -95,8 +88,8 @@ const reducer = (state = initialState, action) =>
         draft.followDone = false;
         break;
       case FOLLOW_SUCCESS:
+        draft.me.Followings.push({ id: action.data.UserId });
         draft.followLoading = false;
-        draft.me.Followings.push({ id: action.data });
         draft.followDone = true;
         break;
       case FOLLOW_FAILURE:
@@ -109,15 +102,31 @@ const reducer = (state = initialState, action) =>
         draft.unfollowDone = false;
         break;
       case UNFOLLOW_SUCCESS:
-        draft.unfollowLoading = false;
         draft.me.Followings = draft.me.Followings.filter(
-          (v) => v.id !== action.data,
+          (v) => v.id !== action.data.UserId,
         );
+        draft.unfollowLoading = false;
         draft.unfollowDone = true;
         break;
       case UNFOLLOW_FAILURE:
         draft.unfollowLoading = false;
         draft.unfollowError = action.error;
+        break;
+      case REMOVE_FOLLOWER_REQUEST:
+        draft.removeFollowerLoading = true;
+        draft.removeFollowerError = null;
+        draft.removeFollowerDone = false;
+        break;
+      case REMOVE_FOLLOWER_SUCCESS:
+        draft.me.Followers = draft.me.Followers.filter(
+          (v) => v.id !== action.data.UserId,
+        );
+        draft.removeFollowerLoading = false;
+        draft.removeFollowerDone = true;
+        break;
+      case REMOVE_FOLLOWER_FAILURE:
+        draft.removeFollowerLoading = false;
+        draft.removeFollowerError = action.error;
         break;
       case LOG_IN_REQUEST:
         draft.logInLoading = true;
@@ -125,8 +134,8 @@ const reducer = (state = initialState, action) =>
         draft.logInDone = false;
         break;
       case LOG_IN_SUCCESS:
-        draft.logInLoading = false;
         draft.me = action.data;
+        draft.logInLoading = false;
         draft.logInDone = true;
         break;
       case LOG_IN_FAILURE:
@@ -166,9 +175,10 @@ const reducer = (state = initialState, action) =>
         draft.changeNicknameDone = false;
         break;
       case CHANGE_NICKNAME_SUCCESS:
+        draft.me.nickname = action.data.nickname;
+        draft.me.flag = false;
         draft.changeNicknameLoading = false;
         draft.changeNicknameDone = true;
-        draft.me = dummyUser(action.data);
         break;
       case CHANGE_NICKNAME_FAILURE:
         draft.changeNicknameLoading = false;

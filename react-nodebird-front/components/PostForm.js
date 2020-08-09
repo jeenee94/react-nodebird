@@ -1,5 +1,6 @@
 import React, { useCallback, useRef, useEffect } from 'react';
 import { Form, Input, Button } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 
 import {
@@ -24,12 +25,14 @@ const PostForm = () => {
     if (text.length < 10 || !text.trim()) {
       return alert('10자 이상의 게시글을 작성하세요.');
     }
+    const formData = new FormData();
+    imagePaths.forEach((p) => {
+      formData.append('image', p);
+    });
+    formData.append('content', text);
     return dispatch({
       type: ADD_POST_REQUEST,
-      data: {
-        content: text,
-        image: imagePaths,
-      },
+      data: formData,
     });
   }, [text, imagePaths]);
 
@@ -50,6 +53,13 @@ const PostForm = () => {
     });
   });
 
+  const onRemoveImage = useCallback((index) => () => {
+    dispatch({
+      type: REMOVE_IMAGE,
+      data: index,
+    });
+  });
+
   return (
     <Form
       style={{ margin: '10px 0 20px' }}
@@ -65,6 +75,7 @@ const PostForm = () => {
       <div>
         <input
           type="file"
+          name="image"
           accept="image/*"
           multiple
           hidden
@@ -79,7 +90,22 @@ const PostForm = () => {
       <div>
         {imagePaths.map((v, i) => (
           <div key={v} style={{ display: 'inline-block' }}>
-            <img src={v} style={{ width: '200px' }} alt={v} />
+            <div style={{ position: 'relative' }}>
+              <img
+                src={`http://localhost:3010/${v}`}
+                style={{ width: '200px' }}
+                alt={v}
+              />
+              <CloseOutlined
+                style={{
+                  position: 'absolute',
+                  color: 'red',
+                  right: '0',
+                  fontSize: '16px',
+                }}
+                onClick={onRemoveImage(i)}
+              />
+            </div>
           </div>
         ))}
       </div>

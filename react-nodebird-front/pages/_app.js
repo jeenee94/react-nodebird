@@ -17,7 +17,7 @@ const App = ({ Component }) => {
   );
 };
 
-App.prop_types = {
+App.propTypes = {
   Component: Proptypes.elementType.isRequired,
 };
 

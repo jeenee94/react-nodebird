@@ -11,7 +11,10 @@ const NicknameEditForm = () => {
   const [nickname, onChangeNickname] = useInput(me?.nickname || '');
 
   const onSubmit = useCallback(() => {
-    dispatch({
+    if (!me.flag) {
+      return alert('닉네임 변경 횟수를 초과하였습니다.');
+    }
+    return dispatch({
       type: CHANGE_NICKNAME_REQUEST,
       data: nickname,
     });
@@ -25,12 +28,16 @@ const NicknameEditForm = () => {
         padding: '20px',
       }}
     >
+      계정당 1회에 한하여 닉네임을 변경할 수 있습니다. (남은 횟수:{' '}
+      {me.flag ? 1 : 0})
       <Input.Search
         value={nickname}
         onChange={onChangeNickname}
         addonBefore="닉네임"
         enterButton="수정"
         onSearch={onSubmit}
+        disabled={!me.flag}
+        style={{ marginTop: '10px' }}
       />
     </Form>
   );

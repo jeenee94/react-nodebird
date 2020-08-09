@@ -9,18 +9,20 @@ const FollowButton = ({ post }) => {
   const { me, followLoading, unfollowLoading } = useSelector(
     (state) => state.user,
   );
-  const isFollowing = me?.Followings.find((v) => v.id === post.User.id);
+  const isFollowing = me?.Followings.find(
+    (v) => v.id === (post?.Retweet?.UserId || post.User.id),
+  );
 
   const onFollow = useCallback(() => {
     if (isFollowing) {
       dispatch({
         type: UNFOLLOW_REQUEST,
-        data: post.User.id,
+        data: post?.Retweet?.UserId || post.User.id,
       });
     } else {
       dispatch({
         type: FOLLOW_REQUEST,
-        data: post.User.id,
+        data: post?.Retweet?.UserId || post.User.id,
       });
     }
   }, [isFollowing]);
@@ -29,6 +31,10 @@ const FollowButton = ({ post }) => {
     <Button
       onClick={onFollow}
       loading={isFollowing ? unfollowLoading : followLoading}
+      size="small"
+      type="primary"
+      danger={isFollowing}
+      style={{ fontSize: 11, marginLeft: 5 }}
     >
       {isFollowing ? '언팔로우' : '팔로우'}
     </Button>
@@ -40,9 +46,10 @@ FollowButton.propTypes = {
     id: PropTypes.number,
     User: PropTypes.object,
     content: PropTypes.string,
-    createdAt: PropTypes.object,
-    Comments: PropTypes.arrayOf(PropTypes.any),
-    Images: PropTypes.arrayOf(PropTypes.any),
+    createdAt: PropTypes.string,
+    Comments: PropTypes.arrayOf(PropTypes.object),
+    Images: PropTypes.arrayOf(PropTypes.object),
+    Retweet: PropTypes.objectOf(PropTypes.any),
   }).isRequired,
 };
 
