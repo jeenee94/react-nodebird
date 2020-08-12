@@ -28,12 +28,12 @@ const AppLayout = ({ children }) => {
       <Menu mode="horizontal">
         <Menu.Item key="home">
           <Link href="/">
-            <a href="/#">노드버드</a>
+            <a>노드버드</a>
           </Link>
         </Menu.Item>
         <Menu.Item key="profile">
           <Link href="/profile">
-            <a href="/#">프로필</a>
+            <a>프로필</a>
           </Link>
         </Menu.Item>
         <Menu.Item key="mail">
@@ -47,7 +47,7 @@ const AppLayout = ({ children }) => {
         <Menu.Item>
           {me ? null : (
             <Link href="/signup">
-              <a href="/#">회원가입</a>
+              <a>회원가입</a>
             </Link>
           )}
         </Menu.Item>

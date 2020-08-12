@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next"
+    "dev": "next",
+    "build": "NODE_ENV=production ANALYZE=true next build",
+    "start": "NODE_ENV=production next start"
   },
   "repository": {
     "type": "git",
@@ -18,10 +20,12 @@
   "homepage": "https://github.com/jeenee94/react-nodebird#readme",
   "dependencies": {
     "@ant-design/icons": "^4.2.1",
+    "@next/bundle-analyzer": "^9.5.2",
     "antd": "^4.4.3",
     "axios": "^0.19.2",
     "faker": "^4.1.0",
     "immer": "^7.0.7",
+    "moment": "^2.27.0",
     "next": "^9.4.4",
     "next-redux-wrapper": "^6.0.2",
     "prop-types": "^15.7.2",

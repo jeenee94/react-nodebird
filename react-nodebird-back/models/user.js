@@ -21,8 +21,7 @@ module.exports = class User extends Model {
         },
         avatar: {
           type: DataTypes.STRING(),
-          allowNull: false,
-          defaultValue: '...',
+          allowNull: true,
         },
         provider: {
           type: DataTypes.STRING(10),

@@ -38,7 +38,7 @@ const Profile = () => {
           <Card.Meta
             avatar={<Avatar>{userInfo.nickname[0]}</Avatar>}
             title={userInfo.nickname}
-            description="노드버드 매니아"
+            description="노드버드를 만든 이"
           />
         </Card>
       ) : null}
@@ -49,7 +49,7 @@ const Profile = () => {
 export const getStaticProps = wrapper.getStaticProps(async (context) => {
   context.store.dispatch({
     type: LOAD_USER_REQUEST,
-    data: 2, // host id
+    data: 1, // host id
   });
   context.store.dispatch(END);
   await context.store.sagaTask.toPromise();

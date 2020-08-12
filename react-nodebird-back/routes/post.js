@@ -76,13 +76,13 @@ router.post('/', isLoggedIn, upload.none(), async (req, res, next) => {
           include: [
             {
               model: User, // 댓글 작성자
-              attributes: ['id', 'nickname'],
+              attributes: ['id', 'nickname', 'avatar'],
             },
           ],
         },
         {
           model: User, // 게시글 작성자
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         },
         {
           model: User, // 좋아요 누른 사람
@@ -116,7 +116,7 @@ router.post('/:postId/comment', isLoggedIn, async (req, res, next) => {
       include: [
         {
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         },
       ],
     });
@@ -145,7 +145,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {
       req.user.id === post.UserId ||
       (post.Retweet && post.Retweet.UserId === req.user.id)
     ) {
-      return res.status(403).send('자신의 게시물은 리트윗할 수 없습니다.');
+      return res.status(403).send('자신의 게시글은 리트윗할 수 없습니다.');
     }
     const retweetTargetId = post.RetweetId || post.id;
     const exPost = await Post.findOne({
@@ -155,7 +155,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {
       },
     });
     if (exPost) {
-      return res.status(403).send('이미 리트윗한 게시물입니다.');
+      return res.status(403).send('이미 리트윗한 게시글입니다.');
     }
     const retweet = await Post.create({
       UserId: req.user.id,
@@ -171,7 +171,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {
           include: [
             {
               model: User,
-              attributes: ['id', 'nickname'],
+              attributes: ['id', 'nickname', 'avatar'],
             },
             {
               model: Image,
@@ -180,7 +180,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {
         },
         {
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         },
         {
           model: User,
@@ -195,7 +195,7 @@ router.post('/:postId/retweet', isLoggedIn, async (req, res, next) => {
           include: [
             {
               model: User,
-              attributes: ['id', 'nickname'],
+              attributes: ['id', 'nickname', 'avatar'],
             },
           ],
         },
@@ -226,7 +226,7 @@ router.get('/:postId', async (req, res, next) => {
           include: [
             {
               model: User,
-              attributes: ['id', 'nickname'],
+              attributes: ['id', 'nickname', 'avatar'],
             },
             {
               model: Image,
@@ -235,7 +235,7 @@ router.get('/:postId', async (req, res, next) => {
         },
         {
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         },
         {
           model: User,
@@ -250,7 +250,7 @@ router.get('/:postId', async (req, res, next) => {
           include: [
             {
               model: User,
-              attributes: ['id', 'nickname'],
+              attributes: ['id', 'nickname', 'avatar'],
             },
           ],
         },

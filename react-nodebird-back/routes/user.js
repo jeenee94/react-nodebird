@@ -60,7 +60,7 @@ router.get('/:userId/posts', async (req, res, next) => {
       include: [
         {
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         },
         {
           model: Image,
@@ -70,7 +70,7 @@ router.get('/:userId/posts', async (req, res, next) => {
           include: [
             {
               model: User,
-              attributes: ['id', 'nickname'],
+              attributes: ['id', 'nickname', 'avatar'],
             },
           ],
         },
@@ -85,7 +85,7 @@ router.get('/:userId/posts', async (req, res, next) => {
           include: [
             {
               model: User,
-              attributes: ['id', 'nickname'],
+              attributes: ['id', 'nickname', 'avatar'],
             },
             {
               model: Image,
@@ -223,24 +223,24 @@ router.post('/logout', isLoggedIn, (req, res) => {
 router.get('/:userId', async (req, res, next) => {
   try {
     const fullUserWithoutPassword = await User.findOne({
-      where: { userId: req.params.userId },
+      where: { id: req.params.userId },
       attributes: {
         exclude: ['password'],
       },
       include: [
         {
           model: Post,
-          attributes: ['userId'],
+          attributes: ['id'],
         },
         {
           model: User,
           as: 'Followings',
-          attributes: ['userId'],
+          attributes: ['id'],
         },
         {
           model: User,
           as: 'Followers',
-          attributes: ['userId'],
+          attributes: ['id'],
         },
       ],
     });

@@ -49,7 +49,7 @@ const User = () => {
       <Head>
         <title>
           {userInfo.nickname}
-          님의 글
+          님의 게시글
         </title>
         <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
         <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
@@ -81,7 +81,13 @@ const User = () => {
           ]}
         >
           <Card.Meta
-            avatar={<Avatar>{userInfo.nickname[0]}</Avatar>}
+            avatar={
+              userInfo.avatar ? (
+                <Avatar src={userInfo.avatar} />
+              ) : (
+                <Avatar>{userInfo.nickname[0]}</Avatar>
+              )
+            }
             title={userInfo.nickname}
           />
         </Card>

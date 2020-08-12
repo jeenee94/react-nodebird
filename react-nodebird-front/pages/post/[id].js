@@ -21,7 +21,7 @@ const Post = () => {
       <Head>
         <title>
           {singlePost.User.nickname}
-          님의 게시물
+          님의 게시글
         </title>
         <meta name="description" content={singlePost.content} />
         <meta

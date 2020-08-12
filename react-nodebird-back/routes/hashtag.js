@@ -25,7 +25,7 @@ router.get('/:hashtag', async (req, res, next) => {
         },
         {
           model: User,
-          attributes: ['id', 'nickname'],
+          attributes: ['id', 'nickname', 'avatar'],
         },
         {
           model: Image,
@@ -35,7 +35,7 @@ router.get('/:hashtag', async (req, res, next) => {
           include: [
             {
               model: User,
-              attributes: ['id', 'nickname'],
+              attributes: ['id', 'nickname', 'avatar'],
             },
           ],
         },
@@ -50,7 +50,7 @@ router.get('/:hashtag', async (req, res, next) => {
           include: [
             {
               model: User,
-              attributes: ['id', 'nickname'],
+              attributes: ['id', 'nickname', 'avatar'],
             },
             {
               model: Image,

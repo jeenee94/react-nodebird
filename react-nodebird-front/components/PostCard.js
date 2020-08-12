@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Card, Popover, Button, Avatar, Comment, List } from 'antd';
+import moment from 'moment';
 import {
   RetweetOutlined,
   HeartOutlined,
@@ -21,6 +22,8 @@ import {
   UNLIKE_POST_REQUEST,
   RETWEET_REQUEST,
 } from '../reducers/post';
+
+moment.locale('ko');
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
@@ -125,10 +128,15 @@ const PostCard = ({ post }) => {
               avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
               title={
                 <>
-                  {post.Retweet.User.nickname}
+                  <span style={{ fontWeight: '700' }}>
+                    {post.Retweet.User.nickname}
+                  </span>
                   {id && id !== post.Retweet.User.id && (
                     <FollowButton post={post} />
                   )}
+                  <span style={{ float: 'right', fontSize: '12px' }}>
+                    {moment(post.createdAt).fromNow()}
+                  </span>
                 </>
               }
               description={
@@ -143,11 +151,24 @@ const PostCard = ({ post }) => {
           </Card>
         ) : (
           <Card.Meta
-            avatar={<Avatar>{post.User.nickname[0]}</Avatar>}
+            avatar={
+              <Link href={`user/${post.User.id}`}>
+                <a>
+                  {post.User.avatar ? (
+                    <Avatar src={post.User.avatar} />
+                  ) : (
+                    <Avatar>{post.User.nickname[0]}</Avatar>
+                  )}
+                </a>
+              </Link>
+            }
             title={
               <>
-                {post.User.nickname}
+                <span style={{ fontWeight: '700' }}>{post.User.nickname}</span>
                 {id && id !== post.User.id && <FollowButton post={post} />}
+                <span style={{ float: 'right', fontSize: '12px' }}>
+                  {moment(post.createdAt).fromNow()}
+                </span>
               </>
             }
             description={
@@ -171,12 +192,13 @@ const PostCard = ({ post }) => {
                 <Comment
                   author={item.User.nickname}
                   avatar={
-                    <Link
-                      href={{ pathname: '/user', query: { id: item.User.id } }}
-                      as={`/user/${item.User.id}`}
-                    >
-                      <a href="/#">
-                        <Avatar>{item.User.nickname[0]}</Avatar>
+                    <Link href={`/user/${item.User.id}`}>
+                      <a>
+                        {item.User.avatar ? (
+                          <Avatar src={item.User.avatar} />
+                        ) : (
+                          <Avatar>{item.User.nickname[0]}</Avatar>
+                        )}
                       </a>
                     </Link>
                   }
