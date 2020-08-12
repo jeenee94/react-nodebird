@@ -7,6 +7,7 @@ import { UNFOLLOW_REQUEST, REMOVE_FOLLOWER_REQUEST } from '../reducers/user';
 
 const FollowList = ({ header, data }) => {
   const dispatch = useDispatch();
+
   const oncancel = (id) => () => {
     if (header === '팔로잉') {
       return dispatch({
@@ -19,6 +20,7 @@ const FollowList = ({ header, data }) => {
       data: id,
     });
   };
+
   return (
     <List
       style={{ marginBottom: '20px' }}

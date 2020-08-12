@@ -18,7 +18,7 @@ const Profile = () => {
     }
   }, [me && me.id]);
   if (!me) {
-    return null;
+    return '내 정보 로딩중...';
   }
 
   useEffect(() => {

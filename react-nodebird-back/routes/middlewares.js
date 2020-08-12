@@ -10,6 +10,6 @@ exports.isNotLoggedIn = (req, res, next) => {
   if (!req.isAuthenticated()) {
     next();
   } else {
-    res.status(401).sned('먼저 로그아웃 해주세요.');
+    res.status(401).send('먼저 로그아웃 해주세요.');
   }
 };

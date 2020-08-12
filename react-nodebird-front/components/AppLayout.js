@@ -1,14 +1,27 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import Proptypes from 'prop-types';
 import Link from 'next/link';
 import { Menu, Input, Row, Col } from 'antd';
 import { useSelector } from 'react-redux';
+import styled from 'styled-components';
+import Router from 'next/router';
 
 import LoginForm from './LoginForm';
 import UserProfile from './UserProfile';
+import useInput from '../hooks/useInput';
+
+const SearchInput = styled(Input.Search)`
+  vertical-align: middle;
+`;
 
 const AppLayout = ({ children }) => {
   const { me } = useSelector((state) => state.user);
+  const [searchInput, onChangeSearchInput, setSearchInput] = useInput('');
+
+  const onSearch = useCallback(() => {
+    Router.push(`/hashtag/${searchInput}`);
+    setSearchInput('');
+  }, [searchInput]);
 
   return (
     <div>
@@ -24,7 +37,12 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item key="mail">
-          <Input.Search enterButton style={{ verticalAlign: 'middle' }} />
+          <SearchInput
+            enterButton
+            value={searchInput}
+            onChange={onChangeSearchInput}
+            onSearch={onSearch}
+          />
         </Menu.Item>
         <Menu.Item>
           {me ? null : (
@@ -47,7 +65,7 @@ const AppLayout = ({ children }) => {
             target="_blank"
             rel="noreferrer noopener"
           >
-            Made by Jeenee
+            Made by JeeNee
           </a>
         </Col>
       </Row>
