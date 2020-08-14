@@ -25,6 +25,7 @@ db.sequelize
   .catch(console.error);
 
 passportConfig();
+app.set('port', process.env.PORT || 3010);
 
 app.use(morgan('dev'));
 app.use(
@@ -52,6 +53,6 @@ app.use('/posts', postsRouter);
 app.use('/user', userRouter);
 app.use('/hashtag', hashtagRouter);
 
-app.listen(3010, () => {
-  console.log('server is running on port 3010');
+app.listen(app.get('port'), () => {
+  console.log(`${app.get('port')}번 포트에서 서버가 실행 중입니다.`);
 });
