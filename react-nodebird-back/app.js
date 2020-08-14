@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(helmet());
   app.use(
     cors({
-      origin: 'http://nodebird.com',
+      origin: ['http://nodebird.com', 'http://54.180.95.86'],
       credentials: true,
     })
   );
