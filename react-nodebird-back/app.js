@@ -35,7 +35,7 @@ if (process.env.NODE_ENV === 'production') {
   app.use(helmet());
   app.use(
     cors({
-      origin: ['http://nodebird.com', 'http://54.180.95.86'],
+      origin: 'http://nodebird.ml',
       credentials: true,
     })
   );
@@ -57,6 +57,11 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     saveUninitialized: false,
     resave: false,
+    cookie: {
+      httpOnly: true,
+      secure: false,
+      domain: process.env.NODE_ENV === 'production' && '.nodebird.ml',
+    },
   })
 );
 app.use(passport.initialize());
