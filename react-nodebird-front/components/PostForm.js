@@ -9,7 +9,6 @@ import {
   REMOVE_IMAGE,
 } from '../reducers/post';
 import useInput from '../hooks/useInput';
-import { backUrl } from '../config/config';
 
 const PostForm = () => {
   const dispatch = useDispatch();
@@ -91,7 +90,7 @@ const PostForm = () => {
         {imagePaths.map((v, i) => (
           <div key={v} style={{ display: 'inline-block' }}>
             <div style={{ position: 'relative' }}>
-              <img src={`${backUrl}/${v}`} style={{ width: '200px' }} alt={v} />
+              <img src={v} style={{ width: '200px' }} alt={v} />
               <CloseOutlined
                 style={{
                   position: 'absolute',
