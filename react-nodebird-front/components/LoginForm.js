@@ -3,6 +3,7 @@ import { Form, Input, Button } from 'antd';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import KakaoLogin from 'react-kakao-login';
+import GoogleLogin from 'react-google-login';
 import styled from 'styled-components';
 
 import useInput from '../hooks/useInput';
@@ -37,6 +38,24 @@ const LoginForm = () => {
   });
 
   const onFailureKakao = useCallback((err) => {
+    console.error(err);
+    alert(err);
+  });
+
+  const onSuccessGoogle = useCallback(async (res) => {
+    dispatch({
+      type: LOG_IN_REQUEST,
+      data: {
+        snsId: res.Pt.getId(),
+        email: res.Pt.getEmail(),
+        nickname: res.Pt.getName(),
+        avatar: res.Pt.getImageUrl(),
+        provider: 'google',
+      },
+    });
+  });
+
+  const onFailureGoogle = useCallback((err) => {
     console.error(err);
     alert(err);
   });
@@ -88,6 +107,15 @@ const LoginForm = () => {
           onSuccess={onSuccessKakao}
           onFailure={onFailureKakao}
           getProfile={1}
+        />
+      </div>
+      <div style={{ margin: 20 }}>
+        <GoogleLogin
+          clientId="922518242949-pppra1i3t25mahq4441s3r7okauo001d.apps.googleusercontent.com"
+          buttonText="Google"
+          onSuccess={onSuccessGoogle}
+          onFailure={onFailureGoogle}
+          cookiePolicy="single_host_origin"
         />
       </div>
     </Form>

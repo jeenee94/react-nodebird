@@ -215,8 +215,58 @@ router.post('/login/kakao', isNotLoggedIn, async (req, res, next) => {
   }
 });
 
+router.post('/login/google', isNotLoggedIn, async (req, res, next) => {
+  try {
+    const { email, nickname, provider, snsId, avatar } = req.body;
+    const exUser = await User.findOne({ where: { email } });
+    if (!exUser) {
+      await User.create({
+        email,
+        nickname,
+        provider,
+        snsId,
+        avatar,
+      });
+    }
+    const user = await User.findOne({ where: { email } });
+    req.login(user, async (loginErr) => {
+      if (loginErr) {
+        console.error(loginErr);
+        return next(loginErr);
+      }
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: user.id },
+        attributes: {
+          exclude: ['password'],
+        },
+        include: [
+          {
+            model: Post,
+            attributes: ['id'],
+          },
+          {
+            model: User,
+            as: 'Followings',
+            attributes: ['id'],
+          },
+          {
+            model: User,
+            as: 'Followers',
+            attributes: ['id'],
+          },
+        ],
+      });
+      return res.status(200).json(fullUserWithoutPassword);
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 router.post('/logout', isLoggedIn, (req, res) => {
   req.logout();
+  res.status(200).clearCookie('connect.sid');
   req.session.destroy();
   res.send('ok');
 });
