@@ -60,6 +60,7 @@ app.use(
     resave: false,
     proxy: true,
     cookie: {
+      sameSite: 'none',
       httpOnly: true,
       secure: true,
       domain: process.env.NODE_ENV === 'production' && '.nodebird.ml',

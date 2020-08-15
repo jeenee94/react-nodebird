@@ -168,6 +168,7 @@ router.post('/login/local', isNotLoggedIn, (req, res, next) => {
 router.post('/login/kakao', isNotLoggedIn, async (req, res, next) => {
   try {
     const { email, nickname, provider, snsId, avatar } = req.body;
+    const secureAvatar = avatar.replace('http://', 'https://');
     const exUser = await User.findOne({ where: { email } });
     if (!exUser) {
       await User.create({
@@ -175,7 +176,7 @@ router.post('/login/kakao', isNotLoggedIn, async (req, res, next) => {
         nickname,
         provider,
         snsId,
-        avatar,
+        avatar: secureAvatar,
       });
     }
     const user = await User.findOne({ where: { email } });
