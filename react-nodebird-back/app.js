@@ -61,7 +61,7 @@ app.use(
     proxy: true,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: true,
       domain: process.env.NODE_ENV === 'production' && '.nodebird.ml',
     },
   })
