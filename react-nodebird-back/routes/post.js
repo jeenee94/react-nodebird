@@ -50,7 +50,9 @@ router.post(
   upload.array('image'),
   async (req, res, next) => {
     // res.json(req.files.map((v) => v.filename));
-    res.json(req.files.map((v) => v.location));
+    res.json(
+      req.files.map((v) => v.location.replace(/\/original\//, '/thumb/'))
+    );
   }
 );
 
