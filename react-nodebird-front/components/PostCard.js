@@ -152,7 +152,7 @@ const PostCard = ({ post }) => {
         ) : (
           <Card.Meta
             avatar={
-              <Link href={`user/${post.User.id}`}>
+              <Link href={`user/${post.User.id}`} prefetch={false}>
                 <a>
                   {post.User.avatar ? (
                     <Avatar src={post.User.avatar} />
@@ -192,7 +192,7 @@ const PostCard = ({ post }) => {
                 <Comment
                   author={item.User.nickname}
                   avatar={
-                    <Link href={`/user/${item.User.id}`}>
+                    <Link href={`/user/${item.User.id}`} prefetch={false}>
                       <a>
                         {item.User.avatar ? (
                           <Avatar src={item.User.avatar} />
