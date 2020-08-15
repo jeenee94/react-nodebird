@@ -30,6 +30,7 @@ passportConfig();
 app.set('port', process.env.PORT || 3010);
 
 if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
   app.use(morgan('combined'));
   app.use(hpp());
   app.use(helmet());
@@ -57,6 +58,7 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     saveUninitialized: false,
     resave: false,
+    proxy: true,
     cookie: {
       httpOnly: true,
       secure: false,
