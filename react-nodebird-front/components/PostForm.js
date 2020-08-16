@@ -94,7 +94,7 @@ const PostForm = () => {
               <img
                 src={
                   process.env.NODE_ENV === 'production'
-                    ? v.src.replace(/\/thumb\//, '/original/')
+                    ? v.replace(/\/thumb\//, '/original/')
                     : `${backUrl}/${v}`
                 }
                 style={{ width: '200px' }}
