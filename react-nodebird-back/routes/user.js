@@ -266,7 +266,6 @@ router.post('/login/google', isNotLoggedIn, async (req, res, next) => {
 
 router.post('/logout', isLoggedIn, (req, res) => {
   req.logout();
-  res.status(200).clearCookie('connect.sid');
   req.session.destroy();
   res.send('ok');
 });

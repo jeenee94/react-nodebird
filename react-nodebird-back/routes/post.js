@@ -10,37 +10,46 @@ const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
-try {
-  fs.accessSync('uploads');
-} catch (error) {
-  console.log('uploads 폴더가 없으므로 생성합니다.');
-  fs.mkdirSync('uploads');
+if (process.env.NODE_ENV === 'production') {
+  AWS.config.update({
+    accessKeyId: process.env.S3_ACCESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    region: 'ap-northeast-2',
+  });
+} else {
+  try {
+    fs.accessSync('uploads');
+  } catch (error) {
+    console.log('uploads 폴더가 없으므로 생성합니다.');
+    fs.mkdirSync('uploads');
+  }
 }
 
-AWS.config.update({
-  accessKeyId: process.env.S3_ACCESS_KEY_ID,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  region: 'ap-northeast-2',
-});
+const storage =
+  process.env.NODE_ENV === 'production'
+    ? multerS3({
+        s3: new AWS.S3(),
+        bucket: 'react-nodebird-ml',
+        key(req, file, cb) {
+          cb(
+            null,
+            `original/${Date.now()}_${path.basename(file.originalname)}`
+          );
+        },
+      })
+    : multer.diskStorage({
+        destination(req, file, done) {
+          done(null, 'uploads');
+        },
+        filename(req, file, done) {
+          const ext = path.extname(file.originalname);
+          const basename = path.basename(file.originalname, ext);
+          done(null, basename + '_' + new Date().getTime() + ext);
+        },
+      });
 
 const upload = multer({
-  // storage: multer.diskStorage({
-  //   destination(req, file, done) {
-  //     done(null, 'uploads');
-  //   },
-  //   filename(req, file, done) {
-  //     const ext = path.extname(file.originalname);
-  //     const basename = path.basename(file.originalname, ext);
-  //     done(null, basename + '_' + new Date().getTime() + ext);
-  //   },
-  // }),
-  storage: multerS3({
-    s3: new AWS.S3(),
-    bucket: 'react-nodebird-ml',
-    key(req, file, cb) {
-      cb(null, `original/${Date.now()}_${path.basename(file.originalname)}`);
-    },
-  }),
+  storage,
   limits: { fileSize: 20 * 1024 * 1024 },
 });
 
@@ -49,10 +58,13 @@ router.post(
   isLoggedIn,
   upload.array('image'),
   async (req, res, next) => {
-    // res.json(req.files.map((v) => v.filename));
-    res.json(
-      req.files.map((v) => v.location.replace(/\/original\//, '/thumb/'))
-    );
+    if (process.env.NODE_ENV === 'production') {
+      res.json(
+        req.files.map((v) => v.location.replace(/\/original\//, '/thumb/'))
+      );
+    } else {
+      res.json(req.files.map((v) => v.filename));
+    }
   }
 );
 

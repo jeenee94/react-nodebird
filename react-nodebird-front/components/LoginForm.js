@@ -57,7 +57,7 @@ const LoginForm = () => {
 
   const onFailureGoogle = useCallback((err) => {
     console.error(err);
-    alert(err);
+    alert(err.error);
   });
 
   useEffect(() => {

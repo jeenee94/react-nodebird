@@ -11,6 +11,7 @@ import { LOAD_MY_INFO_REQUEST, LOAD_USER_REQUEST } from '../../reducers/user';
 import PostCard from '../../components/PostCard';
 import wrapper from '../../store/configureStore';
 import AppLayout from '../../components/AppLayout';
+import { frontUrl } from '../../config/config';
 
 const User = () => {
   const dispatch = useDispatch();
@@ -57,8 +58,8 @@ const User = () => {
           property="og:description"
           content={`${userInfo.nickname}님의 게시글`}
         />
-        <meta property="og:image" content="https://nodebird.ml/favicon.ico" />
-        <meta property="og:url" content={`https://nodebird.ml/user/${id}`} />
+        <meta property="og:image" content={`${frontUrl}/favicon.ico`} />
+        <meta property="og:url" content={`${frontUrl}/user/${id}`} />
       </Head>
       {userInfo ? (
         <Card

@@ -58,11 +58,10 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     saveUninitialized: false,
     resave: false,
-    proxy: true,
+    proxy: process.env.NODE_ENV === 'production',
     cookie: {
-      sameSite: 'none',
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       domain: process.env.NODE_ENV === 'production' && '.nodebird.ml',
     },
   })

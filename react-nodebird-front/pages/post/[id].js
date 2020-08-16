@@ -10,6 +10,7 @@ import PostCard from '../../components/PostCard';
 import wrapper from '../../store/configureStore';
 import { LOAD_MY_INFO_REQUEST } from '../../reducers/user';
 import { LOAD_POST_REQUEST } from '../../reducers/post';
+import { frontUrl } from '../../config/config';
 
 const Post = () => {
   const router = useRouter();
@@ -34,10 +35,10 @@ const Post = () => {
           content={
             singlePost.Images[0]
               ? singlePost.Images[0].src
-              : 'https://nodebird.ml/favicon.ico'
+              : `${frontUrl}/favicon.ico`
           }
         />
-        <meta property="og:url" content={`https://nodebird.ml/post/${id}`} />
+        <meta property="og:url" content={`${frontUrl}/post/${id}`} />
       </Head>
       <PostCard post={singlePost} />
     </AppLayout>
