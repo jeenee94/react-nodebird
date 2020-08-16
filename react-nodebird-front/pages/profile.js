@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 import Router from 'next/router';
+import { message } from 'antd';
 
 import AppLayout from '../components/AppLayout';
 import NicknameEditForm from '../components/NicknameEditForm';
@@ -17,8 +18,9 @@ const Profile = () => {
       Router.push('/');
     }
   }, [me && me.id]);
+
   if (!me) {
-    return '내 정보 로딩중...';
+    return message.error('로그인이 필요합니다.');
   }
 
   useEffect(() => {

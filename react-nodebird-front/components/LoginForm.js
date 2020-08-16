@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect } from 'react';
-import { Form, Input, Button } from 'antd';
-import Link from 'next/link';
+import { Form, Input, Button, Divider } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import KakaoLogin from 'react-kakao-login';
 import GoogleLogin from 'react-google-login';
@@ -67,52 +66,51 @@ const LoginForm = () => {
   }, logInError);
 
   return (
-    <Form onFinish={onSubmitForm} style={{ padding: '10px' }}>
+    <Form onFinish={onSubmitForm} style={{ padding: '20px' }}>
       <div>
-        <label htmlFor="user-email">이메일</label>
-        <br />
         <Input
           name="user-email"
           value={email}
           onChange={onChangeEmail}
           type="email"
+          placeholder="이메일"
+          style={{ marginBottom: 5 }}
           required
         />
-      </div>
-      <div>
-        <label htmlFor="user-password">비밀번호</label>
-        <br />
         <Input
           name="user-password"
           type="password"
           value={password}
           onChange={onChangePassword}
+          placeholder="비밀번호"
           required
         />
       </div>
-      <div style={{ marginTop: '10px' }}>
-        <Button type="primary" htmlType="submit" loading={logInLoading}>
+      <div style={{ margin: '20px 0' }}>
+        <Button
+          style={{ width: '100%' }}
+          type="primary"
+          htmlType="submit"
+          loading={logInLoading}
+        >
           로그인
         </Button>
-        <Link href="/signup">
-          <a>
-            <Button>회원가입</Button>
-          </a>
-        </Link>
       </div>
-      <div style={{ margin: 20 }}>
+      <Divider plain>
+        <span style={{ opacity: 0.8 }}>또는</span>
+      </Divider>
+      <div>
         <KakaoBtn
           jsKey="a3fd7530e852ab7dcbde2dc5fddaad8d"
-          buttonText="Kakao"
+          buttonText="Sign in with Kakao"
           onSuccess={onSuccessKakao}
           onFailure={onFailureKakao}
           getProfile={1}
         />
       </div>
-      <div style={{ margin: 20 }}>
-        <GoogleLogin
+      <div>
+        <GoogleBtn
           clientId="922518242949-pppra1i3t25mahq4441s3r7okauo001d.apps.googleusercontent.com"
-          buttonText="Google"
           onSuccess={onSuccessGoogle}
           onFailure={onFailureGoogle}
           cookiePolicy="single_host_origin"
@@ -124,20 +122,23 @@ const LoginForm = () => {
 
 const KakaoBtn = styled(KakaoLogin)`
   padding: 0;
-  width: 190px;
+  width: 100%;
   height: 44px;
   line-height: 44px;
   color: #783c00;
   background-color: #ffeb00;
   border: 1px solid transparent;
   border-radius: 3px;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 14px;
   text-align: center;
   cursor: pointer;
-  &:hover {
-    box-shadow: 0 0px 15px 0 rgba(0, 0, 0, 0.2);
-  }
+`;
+
+const GoogleBtn = styled(GoogleLogin)`
+  padding: 0;
+  width: 100%;
+  margin: 10px 0;
+  height: 44px;
 `;
 
 export default LoginForm;

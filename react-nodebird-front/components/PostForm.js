@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useEffect } from 'react';
-import { Form, Input, Button } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -24,7 +24,7 @@ const PostForm = () => {
 
   const onSubmit = useCallback(() => {
     if (text.length < 10 || !text.trim()) {
-      return alert('10자 이상의 게시글을 작성하세요.');
+      return message.error('10자 이상의 게시글을 작성하세요.');
     }
     const formData = new FormData();
     imagePaths.forEach((p) => {

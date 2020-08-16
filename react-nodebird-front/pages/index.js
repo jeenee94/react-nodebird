@@ -29,7 +29,7 @@ const Home = () => {
   useEffect(() => {
     function onScroll() {
       if (
-        window.scrollY + document.documentElement.clientHeight >
+        window.pageYOffset + document.documentElement.clientHeight >
         document.documentElement.scrollHeight - 300
       ) {
         if (hasMorePosts && !loadPostsLoading) {

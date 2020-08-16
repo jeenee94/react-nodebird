@@ -17,6 +17,9 @@ export const initialState = {
   removePostLoading: false,
   removePostDone: false,
   removePostError: null,
+  updatePostLoading: false,
+  updatePostDone: false,
+  updatePostError: null,
   addCommentLoading: false,
   addCommentDone: false,
   addCommentError: null,
@@ -57,6 +60,10 @@ export const ADD_POST_FAILURE = 'ADD_POST_FAILURE';
 export const REMOVE_POST_REQUEST = 'REMOVE_POST_REQUEST';
 export const REMOVE_POST_SUCCESS = 'REMOVE_POST_SUCCESS';
 export const REMOVE_POST_FAILURE = 'REMOVE_POST_FAILURE';
+
+export const UPDATE_POST_REQUEST = 'UPDATE_POST_REQUEST';
+export const UPDATE_POST_SUCCESS = 'UPDATE_POST_SUCCESS';
+export const UPDATE_POST_FAILURE = 'UPDATE_POST_FAILURE';
 
 export const ADD_COMMENT_REQUEST = 'ADD_COMMENT_REQUEST';
 export const ADD_COMMENT_SUCCESS = 'ADD_COMMENT_SUCCESS';
@@ -116,7 +123,7 @@ const reducer = (state = initialState, action) =>
         draft.loadPostsLoading = false;
         draft.loadPostsDone = true;
         draft.mainPosts = draft.mainPosts.concat(action.data);
-        draft.hasMorePosts = draft.mainPosts.length === 10;
+        draft.hasMorePosts = action.data.length === 10;
         break;
       case LOAD_USER_POSTS_FAILURE:
       case LOAD_HASHTAG_POSTS_FAILURE:
@@ -168,6 +175,21 @@ const reducer = (state = initialState, action) =>
       case REMOVE_POST_FAILURE:
         draft.removePostLoading = false;
         draft.removePostError = action.error;
+        break;
+      case UPDATE_POST_REQUEST:
+        draft.updatePostLoading = true;
+        draft.updatePostDone = false;
+        draft.updatePostError = null;
+        break;
+      case UPDATE_POST_SUCCESS:
+        draft.mainPosts.find((v) => v.id === action.data.PostId).content =
+          action.data.content;
+        draft.updatePostLoading = false;
+        draft.updatePostDone = true;
+        break;
+      case UPDATE_POST_FAILURE:
+        draft.updatePostLoading = false;
+        draft.updatePostError = action.error;
         break;
       case ADD_COMMENT_REQUEST:
         draft.addCommentLoading = true;

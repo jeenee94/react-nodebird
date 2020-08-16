@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Card, Popover, Button, Avatar, Comment, List } from 'antd';
+import { Card, Popover, Button, Avatar, Comment, List, message } from 'antd';
 import moment from 'moment';
 import {
   RetweetOutlined,
@@ -21,6 +21,7 @@ import {
   LIKE_POST_REQUEST,
   UNLIKE_POST_REQUEST,
   RETWEET_REQUEST,
+  UPDATE_POST_REQUEST,
 } from '../reducers/post';
 
 moment.locale('ko');
@@ -28,13 +29,13 @@ moment.locale('ko');
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
   const [commentFormOpened, setCommentFormOpened] = useState(false);
-
+  const [editMode, setEditMode] = useState(false);
   const id = useSelector((state) => state.user.me?.id);
   const { removePostLoading } = useSelector((state) => state.post);
 
   const onRetweet = useCallback(() => {
     if (!id) {
-      return alert('로그인이 필요합니다.');
+      return message.error('로그인이 필요합니다.');
     }
     return dispatch({
       type: RETWEET_REQUEST,
@@ -42,9 +43,34 @@ const PostCard = ({ post }) => {
     });
   }, [id]);
 
+  const onClickUpdate = useCallback(() => {
+    setEditMode(true);
+  }, []);
+
+  const onCancelUpdate = useCallback(() => {
+    setEditMode(false);
+  }, []);
+
+  const onUpdatePost = useCallback(
+    (editText) => () => {
+      if (editText.length < 10 || !editText.trim()) {
+        message.error('10자 이상의 게시글을 작성하세요.');
+      } else {
+        dispatch({
+          type: UPDATE_POST_REQUEST,
+          data: {
+            PostId: post.id,
+            content: editText,
+          },
+        });
+      }
+    },
+    [post],
+  );
+
   const onLike = useCallback(() => {
     if (!id) {
-      return alert('로그인이 필요합니다.');
+      return message.error('로그인이 필요합니다.');
     }
     return dispatch({
       type: LIKE_POST_REQUEST,
@@ -54,7 +80,7 @@ const PostCard = ({ post }) => {
 
   const onUnlike = useCallback(() => {
     if (!id) {
-      return alert('로그인이 필요합니다.');
+      return message.error('로그인이 필요합니다.');
     }
     return dispatch({
       type: UNLIKE_POST_REQUEST,
@@ -68,7 +94,7 @@ const PostCard = ({ post }) => {
 
   const onRemovePost = useCallback(() => {
     if (!id) {
-      return alert('로그인이 필요합니다.');
+      return message.error('로그인이 필요합니다.');
     }
     return dispatch({
       type: REMOVE_POST_REQUEST,
@@ -77,7 +103,6 @@ const PostCard = ({ post }) => {
   }, [id]);
 
   const liked = post.Likers.find((v) => v.id === id);
-  // TODO: 좋아요 수, 댓글 수 표시
   return (
     <>
       <Card
@@ -100,7 +125,9 @@ const PostCard = ({ post }) => {
               <Button.Group>
                 {id && post.User.id === id ? (
                   <>
-                    <Button>수정</Button>
+                    {!post.Retweet && (
+                      <Button onClick={onClickUpdate}>수정</Button>
+                    )}
                     <Button
                       type="danger"
                       onClick={onRemovePost}
@@ -119,13 +146,47 @@ const PostCard = ({ post }) => {
           </Popover>,
         ]}
         title={
-          post.RetweetId ? `${post.User.nickname}님이 리트윗하셨습니다.` : null
+          post.RetweetId ? (
+            <>
+              <Link href={`/user/${post.User.id}`} prefetch={false}>
+                <a>
+                  {post.User.avatar ? (
+                    <Avatar src={post.User.avatar} />
+                  ) : (
+                    <Avatar>{post.User.nickname[0]}</Avatar>
+                  )}
+                </a>
+              </Link>
+              <span style={{ marginLeft: 10 }}>
+                {post.User.nickname}님이 리트윗하셨습니다.
+              </span>
+              <span
+                style={{
+                  float: 'right',
+                  fontSize: '14px',
+                  textAlign: 'center',
+                }}
+              >
+                {moment(post.createdAt).fromNow()}
+              </span>
+            </>
+          ) : null
         }
       >
         {post.RetweetId && post.Retweet ? (
           <Card>
             <Card.Meta
-              avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
+              avatar={
+                <Link href={`/user/${post.Retweet.User.id}`} prefetch={false}>
+                  <a>
+                    {post.Retweet.User.avatar ? (
+                      <Avatar src={post.Retweet.User.avatar} />
+                    ) : (
+                      <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
+                    )}
+                  </a>
+                </Link>
+              }
               title={
                 <>
                   <span style={{ fontWeight: '700' }}>
@@ -144,7 +205,12 @@ const PostCard = ({ post }) => {
                   {post.Retweet.Images[0] && (
                     <PostImages images={post.Retweet.Images} />
                   )}
-                  <PostCardContent postData={post.Retweet.content} />
+                  <PostCardContent
+                    postData={post.Retweet.content}
+                    onUpdatePost={onUpdatePost}
+                    onCancelUpdate={onCancelUpdate}
+                    editMode={false}
+                  />
                 </>
               }
             />
@@ -152,7 +218,7 @@ const PostCard = ({ post }) => {
         ) : (
           <Card.Meta
             avatar={
-              <Link href={`user/${post.User.id}`} prefetch={false}>
+              <Link href={`/user/${post.User.id}`} prefetch={false}>
                 <a>
                   {post.User.avatar ? (
                     <Avatar src={post.User.avatar} />
@@ -174,7 +240,12 @@ const PostCard = ({ post }) => {
             description={
               <>
                 {post.Images[0] && <PostImages images={post.Images} />}
-                <PostCardContent postData={post.content} />
+                <PostCardContent
+                  postData={post.content}
+                  onUpdatePost={onUpdatePost}
+                  onCancelUpdate={onCancelUpdate}
+                  editMode={editMode}
+                />
               </>
             }
           />
@@ -203,6 +274,7 @@ const PostCard = ({ post }) => {
                     </Link>
                   }
                   content={item.content}
+                  datetime={<span>{moment(item.createdAt).fromNow()}</span>}
                 />
               </li>
             )}
