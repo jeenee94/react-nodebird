@@ -11,7 +11,6 @@ import {
   Indicator,
   Global,
 } from './styles';
-import { backUrl } from '../../config/config';
 
 const ImagesZoom = ({ images, onClose }) => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -36,11 +35,7 @@ const ImagesZoom = ({ images, onClose }) => {
             {images.map((v) => (
               <ImgWrapper key={v.src}>
                 <img
-                  src={
-                    process.env.NODE_ENV === 'production'
-                      ? v.src.replace(/\/thumb\//, '/original/')
-                      : `${backUrl}/${v}`
-                  }
+                  src={v.src.replace(/\/thumb\//, '/original/')}
                   alt={v.src}
                 />
               </ImgWrapper>
