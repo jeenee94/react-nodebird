@@ -2,6 +2,7 @@ import React, { useCallback, useRef, useEffect } from 'react';
 import { Form, Input, Button, message } from 'antd';
 import { CloseOutlined } from '@ant-design/icons';
 import { useSelector, useDispatch } from 'react-redux';
+import shortId from 'shortid';
 
 import {
   ADD_POST_REQUEST,
@@ -44,7 +45,15 @@ const PostForm = () => {
   const onChangeImages = useCallback((e) => {
     const imageFormData = new FormData();
     [].forEach.call(e.target.files, (f) => {
-      imageFormData.append('image', f);
+      const newFile = new File(
+        [f],
+        shortId.generate().concat(f.name.slice(-4)),
+        {
+          type: f.type,
+        },
+      );
+      console.log(newFile);
+      imageFormData.append('image', newFile);
     });
     dispatch({
       type: UPLOAD_IMAGES_REQUEST,
