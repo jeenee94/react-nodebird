@@ -24,35 +24,47 @@ const AppLayout = ({ children }) => {
   }, [searchInput]);
 
   return (
-    <div>
-      <Menu mode="horizontal">
-        <Menu.Item key="home">
+    <div
+      style={{
+        position: 'relative',
+      }}
+    >
+      <Menu
+        mode="horizontal"
+        style={{
+          position: 'fixed',
+          width: '100%',
+          zIndex: 2,
+          backgroundColor: '#e9edee',
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Menu.Item key="home" style={{ position: 'relative' }}>
           <Link href="/">
-            <a>노드버드</a>
+            <a>
+              <b>노드버드</b>
+            </a>
           </Link>
         </Menu.Item>
-        <Menu.Item key="profile">
-          <Link href="/profile">
-            <a>프로필</a>
-          </Link>
-        </Menu.Item>
-        <Menu.Item key="mail">
+        <Menu.Item key="mail" style={{ flex: 1 }}>
           <SearchInput
             enterButton
             value={searchInput}
             onChange={onChangeSearchInput}
             onSearch={onSearch}
+            theme="light"
           />
         </Menu.Item>
-        <Menu.Item>
-          {me ? null : (
-            <Link href="/signup">
-              <a>회원가입</a>
-            </Link>
-          )}
+        <Menu.Item key="profile">
+          <Link href="/profile">
+            <a>
+              <b>프로필</b>
+            </a>
+          </Link>
         </Menu.Item>
       </Menu>
-      <Row gutter={8}>
+      <Row gutter={8} style={{ position: 'relative', top: '45px' }}>
         <Col xs={24} md={6}>
           {me ? <UserProfile /> : <LoginForm />}
         </Col>
