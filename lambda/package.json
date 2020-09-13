@@ -9,7 +9,7 @@
   "author": "jeenee",
   "license": "MIT",
   "dependencies": {
-    "aws-sdk": "^2.734.0",
-    "sharp": "^0.25.4"
+    "aws-sdk": "^2.751.0",
+    "sharp": "^0.26.0"
   }
 }
