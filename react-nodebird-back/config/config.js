@@ -6,8 +6,8 @@ module.exports = {
   development: {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    database: 'react-nodebird',
-    host: '127.0.0.1',
+    database: 'react_nodebird_development',
+    host: 'mydbinstance.cqrninfrgcds.ap-northeast-2.rds.amazonaws.com',
     dialect: 'mysql',
     logging: false,
     timezone: '+09:00',
@@ -15,15 +15,17 @@ module.exports = {
   test: {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    database: 'react-nodebird',
-    host: '127.0.0.1',
+    database: 'react_nodebird_test',
+    host: 'mydbinstance.cqrninfrgcds.ap-northeast-2.rds.amazonaws.com',
     dialect: 'mysql',
+    timezone: '+09:00',
   },
   production: {
     username: process.env.DB_USERNAME,
     password: process.env.DB_PASSWORD,
-    database: 'database_production',
-    host: '127.0.0.1',
+    database: 'react_nodebird_production',
+    host: 'mydbinstance.cqrninfrgcds.ap-northeast-2.rds.amazonaws.com',
     dialect: 'mysql',
+    timezone: '+09:00',
   },
 };

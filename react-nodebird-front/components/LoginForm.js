@@ -23,7 +23,6 @@ const LoginForm = () => {
   }, [email, password]);
 
   const onSuccessKakao = useCallback((res) => {
-    console.log(res);
     const { id } = res.profile;
     const { profile } = res.profile.kakao_account;
     dispatch({

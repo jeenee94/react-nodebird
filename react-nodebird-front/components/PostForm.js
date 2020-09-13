@@ -52,7 +52,6 @@ const PostForm = () => {
           type: f.type,
         },
       );
-      console.log(newFile);
       imageFormData.append('image', newFile);
     });
     dispatch({
