@@ -72,13 +72,6 @@ const AppLayout = ({ children }) => {
           {children}
         </Col>
         <Col xs={24} md={6}>
-          <a
-            href="https://github.com/jeenee94"
-            target="_blank"
-            rel="noreferrer noopener"
-          >
-            Made by JeeNee
-          </a>
         </Col>
       </Row>
     </div>
