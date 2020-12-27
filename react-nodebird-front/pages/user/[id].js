@@ -47,20 +47,28 @@ const User = () => {
 
   return (
     <AppLayout>
-      <Head>
-        <title>
-          {userInfo.nickname}
-          님의 게시글
-        </title>
-        <meta name="description" content={`${userInfo.nickname}님의 게시글`} />
-        <meta property="og:title" content={`${userInfo.nickname}님의 게시글`} />
-        <meta
-          property="og:description"
-          content={`${userInfo.nickname}님의 게시글`}
-        />
-        <meta property="og:image" content={`${frontUrl}/favicon.ico`} />
-        <meta property="og:url" content={`${frontUrl}/user/${id}`} />
-      </Head>
+      {userInfo && (
+        <Head>
+          <title>
+            {userInfo.nickname}
+            님의 게시글
+          </title>
+          <meta
+            name="description"
+            content={`${userInfo.nickname}님의 게시글`}
+          />
+          <meta
+            property="og:title"
+            content={`${userInfo.nickname}님의 게시글`}
+          />
+          <meta
+            property="og:description"
+            content={`${userInfo.nickname}님의 게시글`}
+          />
+          <meta property="og:image" content={`${frontUrl}/favicon.ico`} />
+          <meta property="og:url" content={`${frontUrl}/user/${id}`} />
+        </Head>
+      )}
       {userInfo && userInfo.id !== me?.id ? (
         <Card
           style={{ marginBottom: 20 }}
@@ -94,8 +102,8 @@ const User = () => {
           />
         </Card>
       ) : null}
-      {mainPosts.map((c) => (
-        <PostCard key={c.id} post={c} />
+      {mainPosts.map((post) => (
+        <PostCard key={post.id} post={post} />
       ))}
     </AppLayout>
   );
