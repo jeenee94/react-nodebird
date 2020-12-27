@@ -3,7 +3,7 @@ import Proptypes from 'prop-types';
 import Link from 'next/link';
 import { Menu, Input, Row, Col } from 'antd';
 import { useSelector } from 'react-redux';
-import styled from 'styled-components';
+import styled, { createGlobalStyle } from 'styled-components';
 import Router from 'next/router';
 
 import LoginForm from './LoginForm';
@@ -12,6 +12,21 @@ import useInput from '../hooks/useInput';
 
 const SearchInput = styled(Input.Search)`
   vertical-align: middle;
+`;
+
+const Global = createGlobalStyle`
+  .ant-row {
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+  }
+  
+  .ant-col:first-child {
+      padding-left: 0 !important;
+  }
+  
+  .ant-col:last-child {
+    padding-right: 0 !important;
+  }
 `;
 
 const AppLayout = ({ children }) => {
@@ -29,6 +44,7 @@ const AppLayout = ({ children }) => {
         position: 'relative',
       }}
     >
+      <Global />
       <Menu
         mode="horizontal"
         style={{
@@ -72,6 +88,7 @@ const AppLayout = ({ children }) => {
           {children}
         </Col>
         <Col xs={24} md={6}>
+          {' '}
         </Col>
       </Row>
     </div>
