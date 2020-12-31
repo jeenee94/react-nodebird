@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { END } from 'redux-saga';
 import axios from 'axios';
+import { message } from 'antd';
 
 import AppLayout from '../components/AppLayout';
 import PostForm from '../components/PostForm';
@@ -19,6 +20,21 @@ const Home = () => {
     loadPostsLoading,
     retweetError,
   } = useSelector((state) => state.post);
+  const { reportPostDone, reportPostError } = useSelector(
+    (state) => state.post,
+  );
+
+  useEffect(() => {
+    if (reportPostDone) {
+      message.success(
+        '신고가 접수되었습니다. 빠른 시일 내에 조치하겠습니다.',
+        5,
+      );
+    }
+    if (reportPostError) {
+      message.error(reportPostError, 5);
+    }
+  }, [reportPostDone, reportPostError]);
 
   useEffect(() => {
     if (retweetError) {

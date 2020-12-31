@@ -35,6 +35,9 @@ export const initialState = {
   retweetLoading: false,
   retweetDone: false,
   retweetError: null,
+  reportPostLoading: false,
+  reportPostDone: false,
+  reportPostError: null,
 };
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
@@ -84,6 +87,10 @@ export const UPLOAD_IMAGES_FAILURE = 'UPLOAD_IMAGES_FAILURE';
 export const RETWEET_REQUEST = 'RETWEET_REQUEST';
 export const RETWEET_SUCCESS = 'RETWEET_SUCCESS';
 export const RETWEET_FAILURE = 'RETWEET_FAILURE';
+
+export const REPORT_POST_REQUEST = 'REPORT_POST_REQUEST';
+export const REPORT_POST_SUCCESS = 'REPORT_POST_SUCCESS';
+export const REPORT_POST_FAILURE = 'REPORT_POST_FAILURE';
 
 export const REMOVE_IMAGE = 'REMOVE_IMAGE';
 
@@ -244,15 +251,27 @@ const reducer = (state = initialState, action) =>
         draft.retweetDone = false;
         draft.retweetError = null;
         break;
-      case RETWEET_SUCCESS: {
+      case RETWEET_SUCCESS:
         draft.mainPosts.unshift(action.data);
         draft.retweetLoading = false;
         draft.retweetDone = true;
         break;
-      }
       case RETWEET_FAILURE:
         draft.retweetLoading = false;
         draft.retweetError = action.error;
+        break;
+      case REPORT_POST_REQUEST:
+        draft.reportPostLoading = true;
+        draft.reportPostDone = false;
+        draft.reportPostError = null;
+        break;
+      case REPORT_POST_SUCCESS:
+        draft.reportPostLoading = false;
+        draft.reportPostDone = true;
+        break;
+      case REPORT_POST_FAILURE:
+        draft.reportPostLoading = false;
+        draft.reportPostError = action.error;
         break;
       default:
         break;

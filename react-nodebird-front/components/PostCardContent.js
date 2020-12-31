@@ -31,7 +31,12 @@ const PostCardContent = ({
     <div>
       {editMode ? (
         <>
-          <TextArea value={editText} onChange={onChangeText} />
+          <TextArea
+            value={editText}
+            onChange={onChangeText}
+            rows={7}
+            style={{ resize: 'none' }}
+          />
           <Button.Group>
             <Popconfirm
               placement="left"

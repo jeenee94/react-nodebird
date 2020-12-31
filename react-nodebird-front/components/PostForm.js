@@ -58,14 +58,17 @@ const PostForm = () => {
       type: UPLOAD_IMAGES_REQUEST,
       data: imageFormData,
     });
-  });
+  }, []);
 
-  const onRemoveImage = useCallback((index) => () => {
-    dispatch({
-      type: REMOVE_IMAGE,
-      data: index,
-    });
-  });
+  const onRemoveImage = useCallback(
+    (index) => () => {
+      dispatch({
+        type: REMOVE_IMAGE,
+        data: index,
+      });
+    },
+    [],
+  );
 
   return (
     <Form
@@ -77,7 +80,9 @@ const PostForm = () => {
         value={text}
         onChange={onChangeText}
         maxLength={140}
+        rows={7}
         placeholder="오늘 하루는 어떠셨나요? (10자 이상)"
+        style={{ resize: 'none' }}
       />
       <div>
         <input
