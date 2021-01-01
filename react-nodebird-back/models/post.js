@@ -1,7 +1,9 @@
 const DataTypes = require('sequelize');
 const { Model } = DataTypes;
 
-module.exports = class Post extends Model {
+module.exports = class Post extends (
+  Model
+) {
   static init(sequelize) {
     return super.init(
       {
@@ -26,5 +28,6 @@ module.exports = class Post extends Model {
     db.Post.hasMany(db.Image); // post.addImages, post.getImages
     db.Post.belongsToMany(db.User, { through: 'Like', as: 'Likers' }); // post.addLikers, post.removeLikers
     db.Post.belongsTo(db.Post, { as: 'Retweet' }); // post.addRetweet
+    db.Post.hasMany(db.Report);
   }
 };

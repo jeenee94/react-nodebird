@@ -34,7 +34,9 @@ const AppLayout = ({ children }) => {
   const [searchInput, onChangeSearchInput, setSearchInput] = useInput('');
 
   const onSearch = useCallback(() => {
-    Router.push(`/hashtag/${searchInput}`);
+    if (searchInput) {
+      Router.push(`/hashtag/${searchInput}`);
+    }
     setSearchInput('');
   }, [searchInput]);
 

@@ -1,7 +1,9 @@
 const DataTypes = require('sequelize');
 const { Model } = DataTypes;
 
-module.exports = class User extends Model {
+module.exports = class User extends (
+  Model
+) {
   static init(sequelize) {
     return super.init(
       {
@@ -61,5 +63,6 @@ module.exports = class User extends Model {
       as: 'Followings',
       foreignKey: 'FollowerId',
     });
+    db.User.hasMany(db.Report);
   }
 };

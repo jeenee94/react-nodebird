@@ -1,17 +1,30 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import { Card, Popover, Button, Avatar, Comment, List, message } from 'antd';
-import moment from 'moment';
+import {
+  Card,
+  Popover,
+  Button,
+  Avatar,
+  Comment,
+  List,
+  message,
+  Modal,
+  Input,
+  Popconfirm,
+} from 'antd';
 import {
   RetweetOutlined,
   HeartOutlined,
   HeartFilled,
   MessageOutlined,
   EllipsisOutlined,
+  QuestionCircleOutlined,
 } from '@ant-design/icons';
+import moment from 'moment';
 
+import useInput from '../hooks/useInput';
 import PostImages from './PostImages';
 import CommentForm from './CommentForm';
 import PostCardContent from './PostCardContent';
@@ -22,7 +35,10 @@ import {
   UNLIKE_POST_REQUEST,
   RETWEET_REQUEST,
   UPDATE_POST_REQUEST,
+  REPORT_POST_REQUEST,
 } from '../reducers/post';
+
+const { TextArea } = Input;
 
 moment.locale('ko');
 
@@ -30,8 +46,17 @@ const PostCard = ({ post }) => {
   const dispatch = useDispatch();
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [reportText, onChangeReportText, setReportText] = useInput('');
   const id = useSelector((state) => state.user.me?.id);
-  const { removePostLoading } = useSelector((state) => state.post);
+  const { removePostLoading } = useSelector(
+    (state) => state.post.removePostLoading,
+  );
+  const reportPostLoading = useSelector(
+    (state) => state.post.reportPostLoading,
+  );
+  const reportPostDone = useSelector((state) => state.post.reportPostDone);
+  const reportPostError = useSelector((state) => state.post.reportPostError);
 
   const onRetweet = useCallback(() => {
     if (!id) {
@@ -102,6 +127,32 @@ const PostCard = ({ post }) => {
     });
   }, [id]);
 
+  const onClickReport = useCallback(() => {
+    setModalVisible(true);
+  }, []);
+
+  const onCloseModal = useCallback(() => {
+    setModalVisible(false);
+  }, []);
+
+  const onSubmitReport = useCallback(() => {
+    console.log(id, post.id, reportText);
+    dispatch({
+      type: REPORT_POST_REQUEST,
+      data: {
+        postId: post.id,
+        content: reportText,
+      },
+    });
+  }, [reportText]);
+
+  useEffect(() => {
+    if (reportPostDone || reportPostError) {
+      setModalVisible(false);
+      setReportText('');
+    }
+  }, [reportPostDone, reportPostError]);
+
   const liked = post.Likers.find((v) => v.id === id);
   return (
     <>
@@ -128,16 +179,21 @@ const PostCard = ({ post }) => {
                     {!post.Retweet && (
                       <Button onClick={onClickUpdate}>수정</Button>
                     )}
-                    <Button
-                      type="danger"
-                      onClick={onRemovePost}
-                      loading={removePostLoading}
+                    <Popconfirm
+                      title="정말 삭제하시겠습니까?"
+                      okText="Yes"
+                      cancelText="No"
+                      onConfirm={onRemovePost}
+                      placement="right"
+                      icon={<QuestionCircleOutlined style={{ color: 'red' }} />}
                     >
-                      삭제
-                    </Button>
+                      <Button type="danger" loading={removePostLoading}>
+                        삭제
+                      </Button>
+                    </Popconfirm>
                   </>
                 ) : (
-                  <Button>신고</Button>
+                  <Button onClick={onClickReport}>신고</Button>
                 )}
               </Button.Group>
             }
@@ -173,6 +229,17 @@ const PostCard = ({ post }) => {
           ) : null
         }
       >
+        <Modal
+          title="신고하기"
+          visible={modalVisible}
+          onOk={onSubmitReport}
+          confirmLoading={reportPostLoading}
+          onCancel={onCloseModal}
+        >
+          <form>
+            <TextArea value={reportText} onChange={onChangeReportText} />
+          </form>
+        </Modal>
         {post.RetweetId && post.Retweet ? (
           <Card>
             <Card.Meta

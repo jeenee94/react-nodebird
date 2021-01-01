@@ -4,10 +4,12 @@ const path = require('path');
 const fs = require('fs');
 const multerS3 = require('multer-s3');
 const AWS = require('aws-sdk');
+const nodemailer = require('nodemailer');
 
-const { User, Post, Comment, Image, Hashtag } = require('../models');
+const { User, Post, Comment, Image, Hashtag, Report } = require('../models');
 const { isLoggedIn, isNotLoggedIn } = require('./middlewares');
 
+const prod = process.env.NODE_ENV === 'production';
 const router = express.Router();
 
 AWS.config.update({
@@ -332,6 +334,59 @@ router.patch('/:postId', isLoggedIn, async (req, res, next) => {
       PostId: parseInt(req.params.postId, 10),
       content: req.body.content,
     });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post('/:postId/report', isLoggedIn, async (req, res, next) => {
+  try {
+    const post = Post.findOne({
+      where: { id: req.params.postId },
+    });
+    if (!post) {
+      return res.status(403).send('존재하지 않는 게시글입니다.');
+    }
+    const exReport = await Report.findOne({
+      where: {
+        PostId: parseInt(req.params.postId, 10),
+        UserId: req.user.id,
+      },
+    });
+    if (exReport) {
+      return res.status(403).send('이미 신고하셨습니다.');
+    }
+    await Report.create({
+      content: req.body.content,
+      PostId: parseInt(req.params.postId, 10),
+      UserId: req.user.id,
+    });
+    const transporter = nodemailer.createTransport({
+      host: 'smtp.gmail.com',
+      secure: true,
+      auth: {
+        user: process.env.GMAIL_ID,
+        pass: process.env.GMAIL_PASSWORD,
+      },
+    });
+    await transporter.verify();
+    await transporter.sendMail({
+      from: '"NodeBird 신고내역" <report@nodebird.ml>',
+      to: `"NodeBird 관리자" <${process.env.GMAIL_ID}>`,
+      subject: 'NodeBird - 신고 발생',
+      // nodebird.ml/user/emailAuth/:token
+      html: `
+        <div>
+          <a href="${
+            prod ? 'https://nodebird.ml' : 'http://localhost:3010'
+          }/post/${req.params.postId}">신고가 접수되었습니다.</a>
+          <p>${req.body.content}</p>
+        </div>
+      `,
+    });
+    console.log('Mail sent');
+    res.status(201).send('ok');
   } catch (error) {
     console.error(error);
     next(error);
